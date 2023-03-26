@@ -1,0 +1,30 @@
+@mixin flexCenterColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @mixin flexCenterRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @mixin transition {
+    transition: all 0.3s ease;
+  }
+  
+  @function setColorOpacity($color, $colorOpacity: 1) {
+    @return rgba($color, $colorOpacity);
+  }
+  
+  @function boxShadow($color: #706a6a, $opacity: 1, $shadows: 0 1px 20px) {
+    @return $shadows rgba($color, $opacity);
+  }
+  
+  @function transition($transitionName: all, $duration: 0.3s) {
+    @return $transitionName $duration ease;
+  }
+  
