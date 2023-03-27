@@ -53,6 +53,31 @@
         </div>
       </div>
     </div>
+
+    <div class="best-seller">
+      <div class="title">
+        <p>Here is our <span>Best Sellers</span></p>
+      </div>
+      <div
+        class="best-sellers-cards"
+        v-if="!pendingTopProducts && topProducts.data.length"
+      >
+        <div
+          class="product-card"
+          v-for="(product, index) in topProducts.data"
+          :key="index"
+        >
+          <CardsProduct
+            :name="product.name"
+            :images="product.images"
+            :initial-price="product.price"
+            :final-price="product.final_price"
+            :category="product.item.category"
+            :item="product.item"
+          />
+        </div>
+      </div>
+    </div>
     <!-- <Transition name="scale">
     <div class="list-items" v-if="showItem">
       <ItemsList
@@ -72,6 +97,10 @@ const {
   pending,
   error,
 } = useFetch(() => "https://test.onixglass.com/api/v1/category/allAvailable");
+
+const { data: topProducts, pending: pendingTopProducts } = useFetch(
+  "https://test.onixglass.com/api/v1/mostViewedProducts"
+);
 </script>
 
 <style lang="scss">
@@ -88,32 +117,32 @@ const {
   }
 }
 
-.list-items {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: setColorOpacity($grayLightColor, 0.9);
-  backdrop-filter: blur(12px);
-  z-index: 9999;
-  @include transition;
-}
+// .list-items {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   height: 100%;
+//   width: 100%;
+//   background-color: setColorOpacity($grayLightColor, 0.9);
+//   backdrop-filter: blur(12px);
+//   z-index: 9999;
+//   @include transition;
+// }
 
-.scale-enter-active,
-.scale-leave-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: all 0.3s;
-}
-.scale-enter-from {
-  opacity: 0.4;
-  transform: scale(0.5);
-}
-.scale-leave-to {
-  opacity: 0.4;
-  transform: scale(0.5);
-}
+// .scale-enter-active,
+// .scale-leave-active {
+//   opacity: 1;
+//   transform: scale(1);
+//   transition: all 0.3s;
+// }
+// .scale-enter-from {
+//   opacity: 0.4;
+//   transform: scale(0.5);
+// }
+// .scale-leave-to {
+//   opacity: 0.4;
+//   transform: scale(0.5);
+// }
 .home-page {
   transform: perspective(200px);
   perspective: 200px;
@@ -154,7 +183,7 @@ const {
   @include flexCenterColumn;
   padding: 20px 40px;
   width: 100%;
-  background-color: setColorOpacity($mainColor, 0.1);
+  // background-color: setColorOpacity($mainColor, 0.1);
 
   & > p {
     font-size: 2rem;

@@ -104,21 +104,39 @@ const { cat } = useRoute().query;
 
 const page = ref(1);
 
-const { data: category, pending: catPending } = useFetch(
-  () => "https://test.onixglass.com/api/v1/category/client/" + cat
-);
+const [
+  { data: category, pending: catPending, error: catError },
+  { data: items, pending: itemsPending, error },
+] = await Promise.all([
+  useFetch(
+    () => "https://test.onixglass.com/api/v1/category/client/" + cat,
 
-const {
-  data: items,
-  pending: itemsPending,
-  error,
-} = await useFetch(
-  () =>
-    `https://test.onixglass.com/api/v1/items/client/${id}?page=${page.value}`,
-  {
-    key: `list-items:${page.value}`,
-  }
-);
+    {
+      onRequestError(request, response, opations) {
+        console.log("req error");
+      },
+      onResponseError({ request, response, options }) {
+        console.log("res error");
+        if (response.status == 404) {
+          navigateTo("/");
+        }
+      },
+    }
+  ),
+  useFetch(
+    () =>
+      `https://test.onixglass.com/api/v1/items/client/${id}?page=${page.value}`,
+    {
+      key: `list-items:${page.value}`,
+    },
+    {
+      onRequestError(request, response, options) {},
+      onResponseError({ request, response, options }) {
+        console.log("res error");
+      },
+    }
+  ),
+]);
 
 const paginatorPage = (pageItem) => {
   page.value = pageItem;
