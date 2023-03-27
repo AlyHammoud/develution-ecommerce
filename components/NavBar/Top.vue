@@ -17,7 +17,8 @@
       @click="toggleMenu"
       v-click-outside="{
         handler: () => (mobileMenuOpened = false),
-        excludeByClassNameWithChilds: ['navbar-items', 'hamburger'],
+        excludeByClassNameWithChilds: ['hamburger'],
+        excludeByClassNamesOnlyParents: ['navbar-items'],
       }"
     >
       <span></span>
