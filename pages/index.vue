@@ -63,7 +63,7 @@
         v-if="!pendingTopProducts && topProducts.data.length"
       >
         <div
-          class="product-card"
+          class="product-cards"
           v-for="(product, index) in topProducts.data"
           :key="index"
         >
@@ -74,9 +74,36 @@
             :final-price="product.final_price"
             :category="product.item.category"
             :item="product.item"
+            :index="index"
+            :sale="product.sale"
           />
         </div>
       </div>
+    </div>
+
+    <div class="newest-products">
+      <p class="title">Take a glimpse... <span>New Arrivals</span></p>
+      <div class="cards-wrapper">
+        <div
+          class="product-cards"
+          v-if="!pendingNewest"
+          v-for="(product, index) in newestProducts.data"
+          :key="index"
+        >
+          <CardsProduct
+            :name="product.name"
+            :images="product.images"
+            :initial-price="product.price"
+            :final-price="product.final_price"
+            :category="product.item.category"
+            :item="product.item"
+            :index="index"
+            :sale="product.sale"
+          />
+        </div>
+      </div>
+      <div class="newest-product-wrapper" v-if="!pendingNewest"></div>
+      <CustomLoader v-else />
     </div>
     <!-- <Transition name="scale">
     <div class="list-items" v-if="showItem">
@@ -96,11 +123,13 @@ const {
   data: categories,
   pending,
   error,
-} = useFetch(() => "https://test.onixglass.com/api/v1/category/allAvailable");
+} = useMyFetch(() => "category/allAvailable");
 
-const { data: topProducts, pending: pendingTopProducts } = useFetch(
-  "https://test.onixglass.com/api/v1/mostViewedProducts"
-);
+const { data: topProducts, pending: pendingTopProducts } =
+  useMyFetch("mostViewedProducts");
+
+const { data: newestProducts, pending: pendingNewest } =
+  useMyFetch("newestProducts");
 </script>
 
 <style lang="scss">
@@ -146,6 +175,60 @@ const { data: topProducts, pending: pendingTopProducts } = useFetch(
 .home-page {
   transform: perspective(200px);
   perspective: 200px;
+
+  .best-seller {
+    margin-top: $sectionsTopMargin;
+    width: 100%;
+    height: fit-content;
+    padding: 30px 40px;
+    text-align: center;
+    background-color: $bg-color;
+
+    .title {
+      margin-bottom: 50px;
+      font-size: 1.3rem;
+      color: $mainTextColor;
+
+      span {
+        font-weight: 900;
+      }
+    }
+
+    .best-sellers-cards {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+  }
+
+  .newest-products {
+    background-color: $bg-color;
+    width: 80%;
+    padding-inline: 50px;
+    padding-bottom: 30px;
+    @include flexCenterColumn;
+    margin: $sectionsTopMargin auto;
+
+    .title {
+      padding-block: 50px;
+      font-size: 1.3rem;
+      color: $mainTextColor;
+
+      span {
+        font-weight: 700;
+      }
+    }
+
+    .cards-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 70px;
+    }
+  }
 }
 .curve {
   position: relative;

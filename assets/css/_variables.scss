@@ -1,6 +1,7 @@
 $mainColor: #853232;
 $secondaryColor: #6e0f0f;
 $helperColor: #4848cf;
+$bg-color: #f8f5f5;
 
 $whiteColor: #fff;
 $grayLightColor: #f8f5f5;
@@ -16,10 +17,11 @@ $fontFamily: 'Spoof', sans-serif;
 $pageMaxWidth: min( 100%, 1400px);
 
 
-$sectionsTopMargin: 50px;
+$sectionsTopMargin: 80px;
 
 :root{
     --main-color: #853232;
     --main-color-opacity: rgba(133, 50, 50, 0.2);
+    --main-text-color: #474040;
 
 }

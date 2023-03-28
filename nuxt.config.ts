@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   modules: ["nuxt-icon", "nuxt-swiper", "@nuxtjs/i18n"],
   runtimeConfig: {
     public: {
-      baseURL: "http://localhost:3000",
+      baseURL: process.env.BASE_URL,
+      apiUrl: process.env.API_URL,
     },
   },
   swiper: {

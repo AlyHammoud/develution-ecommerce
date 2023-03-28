@@ -86,14 +86,45 @@
         </Swiper> -->
       </div>
     </div>
-    <div class="items-paginator" v-if="items.meta.last_page > 1">
-      <CustomPaginator
-        :totalItems="items.meta.total"
-        :perPage="items.meta.per_page"
-        :maxPageToShow="5"
-        :disabled="pending"
-        @emitPage="paginatorPage"
-      />
+    <div class="items-paginator">
+      <div class="items-paginator-wrapper" v-if="items.meta.last_page > 1">
+        <CustomPaginator
+          :totalItems="items.meta.total"
+          :perPage="items.meta.per_page"
+          :maxPageToShow="5"
+          :disabled="itemsPending"
+          @emitPage="paginatorPage"
+        />
+      </div>
+    </div>
+
+    <div class="best-seller" v-if="!pendingMostViewed">
+      <div class="title">
+        <p>
+          Best Sellers for <span> {{ category.data.name }}</span>
+        </p>
+      </div>
+      <div
+        class="best-sellers-cards"
+        v-if="!pendingMostViewed && mostViewed.data.length"
+      >
+        <div
+          class="product-cards"
+          v-for="(product, index) in mostViewed.data"
+          :key="index"
+        >
+          <CardsProduct
+            :name="product.name"
+            :images="product.images"
+            :initial-price="product.price"
+            :final-price="product.final_price"
+            :category="product.item.category"
+            :item="product.item"
+            :index="index"
+            :sale="product.sale"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -107,35 +138,19 @@ const page = ref(1);
 const [
   { data: category, pending: catPending, error: catError },
   { data: items, pending: itemsPending, error },
+  { data: mostViewed, pending: pendingMostViewed },
 ] = await Promise.all([
-  useFetch(
-    () => "https://test.onixglass.com/api/v1/category/client/" + cat,
+  useMyFetch(() => "category/client/" + cat, {
+    key: `category:${cat}`,
+  }),
 
-    {
-      onRequestError(request, response, opations) {
-        console.log("req error");
-      },
-      onResponseError({ request, response, options }) {
-        console.log("res error");
-        if (response.status == 404) {
-          navigateTo("/");
-        }
-      },
-    }
-  ),
-  useFetch(
-    () =>
-      `https://test.onixglass.com/api/v1/items/client/${id}?page=${page.value}`,
-    {
-      key: `list-items:${page.value}`,
-    },
-    {
-      onRequestError(request, response, options) {},
-      onResponseError({ request, response, options }) {
-        console.log("res error");
-      },
-    }
-  ),
+  useMyFetch(() => `items/client/${id}?page=${page.value}`, {
+    key: `list-items:${page.value}`,
+  }),
+
+  useMyFetch(() => "mostViewedProductsByCategory?cat=" + cat, {
+    key: `newest:${cat}`,
+  }),
 ]);
 
 const paginatorPage = (pageItem) => {
@@ -237,6 +252,43 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
           }
         }
       }
+    }
+  }
+
+  .items-paginator {
+    width: 100%;
+    margin-block: 50px;
+
+    &-wrapper {
+      margin: 0 auto;
+      width: fit-content;
+    }
+  }
+
+  .best-seller {
+    margin-top: $sectionsTopMargin;
+    width: 100%;
+    height: fit-content;
+    padding: 30px 40px;
+    text-align: center;
+    background-color: $bg-color;
+
+    .title {
+      margin-bottom: 50px;
+      font-size: 1.3rem;
+      color: $mainTextColor;
+
+      span {
+        font-weight: 900;
+      }
+    }
+
+    .best-sellers-cards {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
     }
   }
 }
