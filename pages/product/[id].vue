@@ -77,20 +77,17 @@
             {{ product.data.name }}
           </h2>
 
-          <p>{{ product.data.description }}</p>
+          <p class="description">{{ product.data.description }}</p>
           <div class="actions">
             <div class="left">
-              <nuxt-link to="#">
+              <nuxt-link class="product-link" to="#">
                 {{ category.data.name }}
               </nuxt-link>
 
-              <nuxt-link to="#">
+              <nuxt-link class="item-link" to="#">
                 {{ items.data.name }}
               </nuxt-link>
-              <p class="sale" v-if="product.data.sale > 0">
-                {{ product.data.sale }}%
-              </p>
-              <p class="sale" v-else>No sale</p>
+              <p class="sale">Sale {{ product.data.sale }}%</p>
             </div>
             <div class="rigth">
               <div class="final-price">
@@ -174,10 +171,12 @@ const [
 ]);
 
 const sizeOptions = computed(() =>
-  product.value.data.size.map((size, i) => {
-    let x = { value: size, label: size };
-    return x;
-  })
+  product.value.data.size
+    ? product.value.data.size.map((size, i) => {
+        let x = { value: size, label: size };
+        return x;
+      })
+    : []
 );
 
 useHead({
@@ -247,8 +246,54 @@ onMounted(() => {
 
     .product-infos {
       margin-top: 40px;
-      max-width: 550px;
+      max-width: 650px;
 
+      .name {
+        font-size: 1.4rem;
+        color: $blackColor;
+      }
+
+      .description {
+        font-size: 0.9rem;
+        color: $mainTextColor;
+        padding-left: 9px;
+      }
+
+      .actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding-right: 40px;
+        margin-top: 30px;
+
+        .left {
+          display: flex;
+          height: fit-content;
+          a,
+          .sale {
+            font-size: 0.9rem;
+            padding-inline: 5px;
+            padding-block: 2px;
+            border-radius: 4px;
+            margin-right: 5px;
+          }
+          .product-link {
+            background-color: $mainColor;
+            color: $whiteColor;
+          }
+
+          .item-link {
+            background-color: $grayDarkColor;
+            color: $whiteColor;
+            color: $whiteColor;
+          }
+
+          .sale {
+            background-color: $helperColor;
+            color: $whiteColor;
+          }
+        }
+      }
       // .name
     }
 

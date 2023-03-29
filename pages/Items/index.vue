@@ -46,6 +46,7 @@
             :item="product.item"
             :index="index"
             :sale="product.sale"
+            :uniqueIdName="`all-items-bestseller-${product.id}`"
           />
         </div>
       </div>

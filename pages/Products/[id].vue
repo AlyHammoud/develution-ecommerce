@@ -66,6 +66,7 @@
             :category="category.data"
             :item="items.data"
             :index="index"
+            :uniqueIdName="`products-list-${product.id}`"
             :sale="product.sale"
           />
         </div>

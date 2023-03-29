@@ -76,6 +76,7 @@
             :category="product.item.category"
             :item="product.item"
             :index="index"
+            :uniqueIdName="`home-bestseller-${product.id}`"
             :sale="product.sale"
           />
         </div>
@@ -101,6 +102,8 @@
             :item="product.item"
             :index="index"
             :sale="product.sale"
+            :uniqueIdName="`home-newest-${product.id}`"
+            :key="product.id"
           />
         </div>
       </div>

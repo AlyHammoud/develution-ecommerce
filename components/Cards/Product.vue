@@ -9,9 +9,15 @@
     </div>
     <nuxt-link :to="`/product/${id}?cat=${category.id}&item=${item.id}`">
       <div class="images" v-if="images.length">
-        <img class="main-image" :src="images[0].image_url" alt="" />
+        <img
+          class="main-image"
+          :src="images[0].image_url"
+          alt=""
+          :id="uniqueIdName + '_main'"
+        />
         <img
           class="image-thumb"
+          :id="uniqueIdName + '_thumb'"
           :src="images[1].image_url"
           v-if="images.length > 1"
           alt=""
@@ -86,6 +92,7 @@ const {
   images,
   sale,
   index,
+  uniqueIdName,
 } = defineProps({
   id: {
     type: Number,
@@ -125,20 +132,36 @@ const {
     type: Number,
     default: 0,
   },
+
+  uniqueIdName: {
+    type: String,
+  },
 });
 
-const imagesFade = (ev, index, leftValue, opacityValue) => {
+// const imagesFade = (ev, indexx, leftValue, opacityValue) => {
+//   // console.log(tmpItems.data[index].images);
+//   const tmpImages = toRaw(images);
+
+//   if (tmpImages.length > 1) {
+//   document.querySelectorAll(".product-card .images .image-thumb")[
+//     index
+//   ].style.left = leftValue;
+
+//     document.querySelectorAll(".product-card .images .main-image")[
+//       index
+//     ].style.opacity = opacityValue;
+//   }
+// };
+const imagesFade = (ev, indexx, leftValue, opacityValue) => {
   // console.log(tmpItems.data[index].images);
   const tmpImages = toRaw(images);
 
   if (tmpImages.length > 1) {
-    document.querySelectorAll(".product-card .images .image-thumb")[
-      index
-    ].style.left = leftValue;
+    document.querySelector("#" + uniqueIdName + "_thumb").style.left =
+      leftValue;
 
-    document.querySelectorAll(".product-card .images .main-image")[
-      index
-    ].style.opacity = opacityValue;
+    document.querySelector("#" + uniqueIdName + "_main").style.opacity =
+      opacityValue;
   }
 };
 </script>

@@ -130,6 +130,8 @@
               :item="product.item"
               :index="index"
               :sale="product.sale"
+              :uniqueIdName="`items-bestseller-${product.id}`"
+              :key="product.id"
             />
           </swiper-slide>
         </Swiper>
