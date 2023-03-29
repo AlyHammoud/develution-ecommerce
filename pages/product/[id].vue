@@ -228,13 +228,14 @@ const makeOrder = () => {
   //   alert("aa");
   // } else {
   navigateTo(
-    "https://wa.me/+96170695391?text=" +
-      config.baseURL +
-      "product/19?cat=3&item=8",
+    `https://api.whatsapp.com/send?text=${config.baseURL}/product/22?cat=3&item=9&phone=+96170695391`,
     {
       external: true,
     }
   );
+  // navigateTo("https://wa.me/+96170695391?text=asasdasd", {
+  //   external: true,
+  // });
   // }
 };
 
