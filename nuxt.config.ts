@@ -36,5 +36,6 @@ export default defineNuxtConfig({
     { src: "@/plugins/directives/click-outside" },
     { src: "@/plugins/directives/window-scroll" },
     { src: "@/plugins/splide", ssr: false },
+    { src: "@/plugins/MultiSelect", ssr: false },
   ],
 });
