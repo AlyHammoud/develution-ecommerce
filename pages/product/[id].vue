@@ -90,7 +90,7 @@
               <p class="sale">Sale {{ product.data.sale }}%</p>
             </div>
             <div class="rigth">
-              <div class="final-price">
+              <div class="final-price" v-if="product.data.sale > 0">
                 {{
                   new Intl.NumberFormat("en-US", {
                     maximumFractionDigits: 2,
@@ -98,7 +98,17 @@
                 }}$
               </div>
 
-              <div class="initial-price">
+              <div
+                class="initial-price"
+                :style="{
+                  color: product.data.sale
+                    ? 'var(--main-color)'
+                    : 'var(--main-text-color)',
+                  'text-decoration': product.data.sale
+                    ? 'line-through'
+                    : 'none',
+                }"
+              >
                 {{
                   new Intl.NumberFormat("en-US", {
                     maximumFractionDigits: 2,
@@ -109,18 +119,28 @@
           </div>
 
           <div class="product-selections">
-            <div class="colors">
-              Please select a color:
-              <div
-                class="color"
-                v-for="(color, index) in product.data.color"
-                :key="index"
-                style="height: 20px; width: 20px"
-                :style="{ 'background-color': color }"
-              ></div>
+            <div class="colors-wrapper selection" v-if="product.data.color">
+              <p class="title">Please select a color:</p>
+              <div class="colors">
+                <div
+                  class="color"
+                  v-for="(color, index) in product.data.color"
+                  :key="index"
+                  :style="{
+                    'background-color': color,
+                    opacity: colors.includes(color) ? 0.7 : 1,
+                  }"
+                  @click="addColor(color, index)"
+                >
+                  <div class="remove-color" v-if="colors.includes(color)">
+                    x
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="sizes">
+            <div class="sizes selection" v-if="product.data.size">
+              <p class="title">Please select a size</p>
               <div v-if="!productPending">
                 <multiselect
                   :mode="'tags'"
@@ -132,13 +152,23 @@
               </div>
             </div>
 
-            <div class="quantity">
-              <div v-if="product.data.quantity > 1">
+            <div class="quantity selection">
+              <div v-if="product.data.quantity > 1" class="title">
                 there {{ product.data.quantity > 1 ? "are" : "is" }}
-                <span>{{ product.data.quantity }}</span> more
+                <span>{{ product.data.quantity }}</span> more available
               </div>
               <div v-else>No more available</div>
-              <input type="number" min="1" :max="product.data.quantity" id="" />
+              <input
+                type="number"
+                :placeholder="`Avalible ${product.data.quantity}`"
+                min="1"
+                :max="product.data.quantity"
+                id=""
+                v-model="quantity"
+              />
+            </div>
+            <div class="whatsapp-us" @click="makeOrder">
+              <img src="/images/whatsapp.png" alt="" />
             </div>
           </div>
         </div>
@@ -150,8 +180,8 @@
 <script setup>
 const { id } = useRoute().params;
 const { item, cat } = useRoute().query;
+const config = useRuntimeConfig();
 
-const sizes = ref(null);
 const [
   { data: product, pending: productPending },
   { data: category, pending: categoryPending },
@@ -178,6 +208,35 @@ const sizeOptions = computed(() =>
       })
     : []
 );
+
+const sizes = ref(null);
+
+const colors = ref([]);
+
+const addColor = (color, index) => {
+  if (colors.value.includes(color)) {
+    colors.value.splice(index, 1);
+  } else {
+    colors.value.push(color);
+  }
+};
+
+const quantity = ref(0);
+
+const makeOrder = () => {
+  // if (!colors.value.length && !sizes.value && !quantity.value) {
+  //   alert("aa");
+  // } else {
+  navigateTo(
+    "https://wa.me/+96170695391?text=" +
+      config.baseURL +
+      "product/19?cat=3&item=8",
+    {
+      external: true,
+    }
+  );
+  // }
+};
 
 useHead({
   meta: [
@@ -212,6 +271,7 @@ onMounted(() => {
   display: flex;
   width: 90%;
   margin: 30px auto;
+  padding-bottom: 50px;
 
   @media screen and (max-width: 880px) {
     width: 100%;
@@ -243,10 +303,25 @@ onMounted(() => {
   .product-contents {
     display: flex;
     width: 100%;
+    padding-right: 8px;
+
+    @media screen and (max-width: 680px) {
+      flex-direction: column;
+    }
 
     .product-infos {
       margin-top: 40px;
       max-width: 650px;
+
+      @media (max-width: 880px) {
+        margin-top: 60px;
+        padding-inline: 60px;
+      }
+
+      @media (max-width: 450px) {
+        margin-top: 60px;
+        padding-inline: 20px;
+      }
 
       .name {
         font-size: 1.4rem;
@@ -265,10 +340,15 @@ onMounted(() => {
         justify-content: space-between;
         padding-right: 40px;
         margin-top: 30px;
+        gap: 40px;
 
         .left {
           display: flex;
           height: fit-content;
+          flex-wrap: wrap;
+          column-gap: 4px;
+          row-gap: 8px;
+
           a,
           .sale {
             font-size: 0.9rem;
@@ -293,8 +373,77 @@ onMounted(() => {
             color: $whiteColor;
           }
         }
+
+        .rigth {
+          .final-price {
+            font-weight: 700;
+            color: $mainTextColor;
+          }
+          .initial-price {
+            color: $mainColor;
+            text-decoration: line-through;
+          }
+        }
       }
-      // .name
+
+      .product-selections {
+        margin-top: 30px;
+
+        .title {
+          font-size: 1.1rem;
+          color: $mainTextColor;
+          margin-bottom: 5px;
+        }
+        .selection {
+          margin-top: 30px;
+          max-width: 300px;
+        }
+
+        .colors-wrapper {
+          width: 100%;
+          .colors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .color {
+              border: 1px solid $mainTextColor;
+              cursor: pointer;
+              height: 25px;
+              width: 25px;
+              @include flexCenterRow;
+
+              * {
+                color: $whiteColor;
+              }
+            }
+          }
+        }
+
+        .quantity {
+          span {
+            color: $mainColor;
+            font-weight: 700;
+          }
+          input {
+            width: 100%;
+            height: 35px;
+            border: 1px solid setColorOpacity($grayDarkColor, 0.6);
+            border-radius: 4px;
+            padding-inline: 8px;
+            outline: none;
+          }
+        }
+
+        .whatsapp-us {
+          img {
+            width: 200px;
+            height: 100px;
+            object-fit: contain;
+            cursor: pointer;
+          }
+        }
+      }
     }
 
     .product-slider {
@@ -306,6 +455,27 @@ onMounted(() => {
         width: 350px !important;
         min-width: 350px !important;
         height: 470px;
+      }
+
+      @media screen and (max-width: 680px) {
+        width: 480px !important;
+        min-width: 480px !important;
+        height: 480px;
+        margin: 0 auto;
+      }
+
+      @media screen and (max-width: 520px) {
+        width: 380px !important;
+        min-width: 380px !important;
+        height: 400px;
+        margin: 0 auto;
+      }
+
+      @media screen and (max-width: 400px) {
+        width: 300px !important;
+        min-width: 300px !important;
+        height: 320px;
+        margin: 0 auto;
       }
 
       .splider-main {
@@ -324,16 +494,32 @@ onMounted(() => {
           margin-top: -60px;
         }
 
+        @media (max-width: 680px) {
+          margin-top: 64px;
+        }
+
+        @media (max-width: 520px) {
+          margin-top: 20px;
+        }
+        @media (max-width: 400px) {
+          margin-top: -2%;
+        }
+
         &::after {
           content: "";
           position: absolute;
           // inset: 9%;
-          left: 12%;
+          left: 10%;
           top: 25%;
-          right: 12%;
+          right: 10%;
           bottom: 25%;
           border: 5px solid setColorOpacity($mainColor, 0.3);
           z-index: -1;
+
+          @media (max-width: 880px) {
+            left: 12%;
+            right: 12%;
+          }
         }
 
         .splide__slide.is-active.is-visible {
