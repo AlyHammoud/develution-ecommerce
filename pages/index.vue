@@ -68,6 +68,7 @@
           :key="index"
         >
           <CardsProduct
+            :id="product.id"
             :name="product.name"
             :images="product.images"
             :initial-price="product.price"
@@ -91,6 +92,7 @@
           :key="index"
         >
           <CardsProduct
+            :id="product.id"
             :name="product.name"
             :images="product.images"
             :initial-price="product.price"

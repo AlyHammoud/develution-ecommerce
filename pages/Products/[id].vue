@@ -1,17 +1,18 @@
 <template>
   <div class="items-list">
     <div class="page-hero">
-      <div v-if="!catPending">
+      <div v-if="!catPending || !itemsPending">
         <PageHero
-          :name="category.data.name"
-          :description="category.data.description"
-          :image="category.data.image_url"
+          :name="items.data.name"
+          :description="items.data.description"
+          :image="items.data.images[0].image_url"
         />
       </div>
       <div class="loader" v-else>
         <CustomLoader />
       </div>
     </div>
+
     <div class="curve">
       <svg
         id="wave"
@@ -33,106 +34,52 @@
         ></path>
       </svg>
 
-      <p>Dig deeper into our amazing collection</p>
+      <p>Here you go...</p>
+    </div>
+
+    <div class="search-bar">
+      <input
+        type="text"
+        @input="startSearch($event)"
+        class="product-search"
+        :placeholder="'Search in ' + items.data.name"
+      />
+      <div class="line"></div>
     </div>
     <div class="items-wrapper">
-      <div class="loader" v-if="itemsPending">
+      <div class="loader" v-if="productsPending || catPending || itemsPending">
         <CustomLoader />
       </div>
       <div class="items-contents" v-else>
-        <div class="item" v-for="(item, index) in items.data" :key="index">
-          <nuxt-link class="link" :to="`/products/${item.id}?cat=${cat}`">
-            <div
-              class="images"
-              @mouseleave="imagesFade($event, index, '200px', 1)"
-              @mouseover="imagesFade($event, index, 0, 0)"
-            >
-              <img class="main-image" :src="item.images[0].image_url" alt="" />
-              <img
-                :src="item.images[1].image_url"
-                class="image-thumb"
-                v-if="item.images.length > 1"
-                alt=""
-              />
-            </div>
-
-            <p>{{ item.name }}</p>
-          </nuxt-link>
+        <div
+          class="item"
+          v-for="(product, index) in products.data"
+          :key="index"
+        >
+          <CardsProduct
+            style="border-radius: 20px"
+            :id="product.id"
+            :name="product.name"
+            :images="product.images"
+            :initial-price="product.price"
+            :final-price="product.final_price"
+            :category="category.data"
+            :item="items.data"
+            :index="index"
+            :sale="product.sale"
+          />
         </div>
       </div>
     </div>
     <div class="items-paginator">
-      <div class="items-paginator-wrapper" v-if="items.meta.last_page > 1">
+      <div class="items-paginator-wrapper" v-if="products.meta.last_page > 1">
         <CustomPaginator
-          :totalItems="items.meta.total"
-          :perPage="items.meta.per_page"
+          :totalItems="products.meta.total"
+          :perPage="products.meta.per_page"
           :maxPageToShow="5"
-          :disabled="itemsPending"
+          :disabled="productsPending"
           @emitPage="paginatorPage"
         />
-      </div>
-    </div>
-
-    <div
-      class="best-seller"
-      v-if="!pendingMostViewed && mostViewed.data.length"
-    >
-      <div class="title">
-        <p>
-          Best Sellers for <span> {{ category.data.name }}</span>
-        </p>
-      </div>
-      <div class="best-sellers-cards">
-        <Swiper
-          :slidesPerView="5"
-          :spaceBetween="0"
-          :pagination="{
-            clickable: true,
-          }"
-          :breakpoints="{
-            '320': {
-              slidesPerView: 1,
-              // spaceBetween: 5,
-            },
-            '590': {
-              slidesPerView: 2,
-              spaceBetween: 5,
-            },
-            '860': {
-              slidesPerView: 3,
-              spaceBetween: 10,
-            },
-            '1120': {
-              slidesPerView: 4,
-              spaceBetween: 20,
-            },
-            '1400': {
-              slidesPerView: 5,
-              spaceBetween: 30,
-            },
-          }"
-          :navigation="true"
-          :modules="[SwiperPagination, SwiperNavigation]"
-          class="best-seller-swiper"
-        >
-          <swiper-slide
-            class="best-seller-slide"
-            v-for="(product, index) in mostViewed.data"
-            :key="index"
-          >
-            <CardsProduct
-              :id="product.id"
-              :name="product.name"
-              :images="product.images"
-              :initial-price="product.price"
-              :final-price="product.final_price"
-              :category="product.item.category"
-              :item="product.item"
-              :index="index"
-              :sale="product.sale"
-            />
-          </swiper-slide>
-        </Swiper>
       </div>
     </div>
   </div>
@@ -144,39 +91,46 @@ const { cat } = useRoute().query;
 
 const page = ref(1);
 
+const search = ref("");
+const timers = ref(null);
+
+const startSearch = (ev) => {
+  clearTimeout(timers.value);
+
+  timers.value = setTimeout(() => {
+    search.value = ev.target.value;
+  }, 900);
+};
+
 const [
   { data: category, pending: catPending, error: catError },
   { data: items, pending: itemsPending, error },
-  { data: mostViewed, pending: pendingMostViewed },
+  { data: products, pending: productsPending, error: productError },
 ] = await Promise.all([
   useMyFetch(() => "category/client/" + cat, {
     key: `category:${cat}`,
   }),
 
-  useMyFetch(() => `items/client/${id}?page=${page.value}`, {
-    key: `list-items:${page.value}`,
+  useMyFetch(() => `item/client/${id}`, {
+    key: `item:${id}`,
   }),
 
-  useMyFetch(() => "mostViewedProductsByCategory?cat=" + cat, {
-    key: `newest:${cat}`,
-  }),
+  useMyFetch(
+    () =>
+      "products/client/" +
+      id +
+      "?page=" +
+      page.value +
+      "&search=" +
+      search.value,
+    {
+      key: `products:${id}&${page}`,
+    }
+  ),
 ]);
 
 const paginatorPage = (pageItem) => {
   page.value = pageItem;
-};
-
-const imagesFade = (ev, index, leftValue, opacityValue) => {
-  const tmpItems = toRaw(items.value);
-  // console.log(tmpItems.data[index].images);
-  if (tmpItems.data[index].images.length > 1) {
-    document.querySelectorAll(".link .images .image-thumb")[index].style.left =
-      leftValue;
-
-    document.querySelectorAll(".link .images .main-image")[
-      index
-    ].style.opacity = opacityValue;
-  }
 };
 </script>
 
@@ -198,12 +152,15 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
   }
 
   .items-wrapper {
-    min-height: 100px;
+    min-height: 200px;
     width: 100%;
+    position: relative;
     .loader {
-      position: absolute;
+      position: absolute !important;
       top: 50%;
       left: 50%;
+      //   height: 300px;
+      //   width: 100%;
       transform: translate(-50%, -50%);
     }
 
@@ -352,6 +309,46 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
         //   margin: 0 auto;
         // }
       }
+    }
+  }
+
+  .search-bar {
+    @include flexCenterColumn;
+    margin-bottom: -40px;
+    margin-top: 40px;
+    width: 400px;
+    height: 40px;
+    position: relative;
+    margin: 0 auto;
+
+    input[type="text"] {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      border-bottom: 1px dashed $mainColor;
+      padding-inline: 7px;
+      //   transition: all 0.4s ease;
+
+      &:focus {
+        border-bottom: 1px solid transparent;
+      }
+    }
+
+    .line {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background-color: $mainColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: all 0.8s ease;
+    }
+
+    input[type="text"]:focus ~ .line {
+      transform: scaleX(1);
     }
   }
 }

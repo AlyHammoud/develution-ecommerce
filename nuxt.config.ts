@@ -35,5 +35,6 @@ export default defineNuxtConfig({
     // { src: "@/plugins/aos", ssr: false, mode: "client" },
     { src: "@/plugins/directives/click-outside" },
     { src: "@/plugins/directives/window-scroll" },
+    { src: "@/plugins/splide", ssr: false },
   ],
 });

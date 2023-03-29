@@ -7,7 +7,7 @@
     <div class="sale" v-if="sale > 0">
       <p>{{ sale }}%</p>
     </div>
-    <nuxt-link to="#">
+    <nuxt-link :to="`/product/${id}?cat=${category.id}&item=${item.id}`">
       <div class="images" v-if="images.length">
         <img class="main-image" :src="images[0].image_url" alt="" />
         <img
@@ -62,7 +62,9 @@
             {{ category.name }}
           </nuxt-link>
 
-          <nuxt-link to="#"> {{ item.name }} </nuxt-link>
+          <nuxt-link :to="`/products/${item.id}?cat=${category.id}`">
+            {{ item.name }}
+          </nuxt-link>
         </div>
       </div>
       <div class="actions">
@@ -74,43 +76,56 @@
 </template>
 
 <script setup>
-const { name, initialPrice, finalPrice, category, item, images, sale, index } =
-  defineProps({
-    name: {
-      type: String,
-      default: "",
-    },
-    initialPrice: {
-      type: Number,
-      default: 0,
-    },
-    finalPrice: {
-      type: Number,
-      default: 0,
-    },
+const {
+  id,
+  name,
+  initialPrice,
+  finalPrice,
+  category,
+  item,
+  images,
+  sale,
+  index,
+} = defineProps({
+  id: {
+    type: Number,
+    default: 0,
+  },
+  name: {
+    type: String,
+    default: "",
+  },
+  initialPrice: {
+    type: Number,
+    default: 0,
+  },
+  finalPrice: {
+    type: Number,
+    default: 0,
+  },
 
-    category: {
-      type: Object,
-      default: {},
-    },
-    item: {
-      type: Object,
-      default: {},
-    },
+  category: {
+    type: Object,
+    default: {},
+  },
+  item: {
+    type: Object,
+    default: {},
+  },
 
-    images: {
-      type: Array,
-      default: [],
-    },
-    index: {
-      type: Number,
-      default: 0,
-    },
-    sale: {
-      type: Number,
-      default: 0,
-    },
-  });
+  images: {
+    type: Array,
+    default: [],
+  },
+  index: {
+    type: Number,
+    default: 0,
+  },
+  sale: {
+    type: Number,
+    default: 0,
+  },
+});
 
 const imagesFade = (ev, index, leftValue, opacityValue) => {
   // console.log(tmpItems.data[index].images);
