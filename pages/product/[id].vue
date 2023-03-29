@@ -228,7 +228,7 @@ const makeOrder = () => {
   //   alert("aa");
   // } else {
   navigateTo(
-    `https://api.whatsapp.com/send?text=${config.baseURL}/product/22?cat=3&item=9&phone=+96170695391`,
+    `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
     {
       external: true,
     }
@@ -242,7 +242,12 @@ const makeOrder = () => {
 useHead({
   meta: [
     { hid: "og-type", property: "og:type", content: "website" },
-    { hid: "og-title", property: "og:title", content: "My Title" },
+    {
+      hid: "og-title",
+      property: "og:title",
+      content: () =>
+        `description: ${product.value.data.name} | ${product.value.data.price} | ${quantity.value}`,
+    },
     {
       hid: "og-desc",
       property: "og:description",
