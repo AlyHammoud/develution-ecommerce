@@ -246,7 +246,7 @@ useHead({
       hid: "og-title",
       property: "og:title",
       content: () =>
-        `description: ${product.value.data.name} | ${product.value.data.price} | ${quantity.value}`,
+        `product: ${product.value.data.name} | ${product.value.data.final_price}$ | Qty:${quantity.value}`,
     },
     {
       hid: "og-desc",
