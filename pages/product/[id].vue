@@ -218,7 +218,7 @@ const sizeOptions = computed(() =>
     : []
 );
 
-const sizes = ref(null);
+const sizes = ref([]);
 
 const colors = ref([]);
 const finalColors = ref([]);
@@ -241,7 +241,16 @@ const addColor = (color, index) => {
 const quantity = ref(0);
 
 const makeOrder = () => {
-  if (!colors.value.length && !sizes.value && !quantity.value) {
+  let tmpProduct = product.value.data;
+  if (!tmpProduct.color) {
+    colors.value.push("no colors available");
+  }
+
+  if (!tmpProduct.size) {
+    sizes.value.push("no sizes available");
+  }
+
+  if (!colors.value.length || !sizes.value.length || quantity.value == 0) {
     showSnackBar.value = true;
 
     setTimeout(() => {
@@ -279,7 +288,8 @@ useHead({
     {
       hid: "og-desc",
       property: "og:description",
-      content: () => `Colors: ${final_colors} | Sizes needed: ${final_sizes}`,
+      content: () =>
+        `Colors: ${final_colors.value} | Sizes needed: ${final_sizes.value}`,
     },
     {
       hid: "og-image",
