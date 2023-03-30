@@ -174,6 +174,70 @@
         </div>
       </div>
     </div>
+    <div
+      class="best-seller"
+      v-if="!pendingMostViewed && mostViewed.data.length"
+    >
+      <div class="title">
+        <p>
+          you may aslo like in <span> {{ category.data.name }}</span>
+        </p>
+      </div>
+      <div class="best-sellers-cards">
+        <Swiper
+          :slidesPerView="5"
+          :spaceBetween="0"
+          :pagination="{
+            clickable: true,
+          }"
+          :breakpoints="{
+            '320': {
+              slidesPerView: 1,
+              // spaceBetween: 5,
+            },
+            '590': {
+              slidesPerView: 2,
+              spaceBetween: 5,
+            },
+            '860': {
+              slidesPerView: 3,
+              spaceBetween: 10,
+            },
+            '1120': {
+              slidesPerView: 4,
+              spaceBetween: 20,
+            },
+            '1400': {
+              slidesPerView: 5,
+              spaceBetween: 30,
+            },
+          }"
+          :navigation="true"
+          :modules="[SwiperPagination, SwiperNavigation]"
+          class="best-seller-swiper"
+        >
+          <swiper-slide
+            class="best-seller-slide"
+            v-for="(product, index) in mostViewed.data"
+            :key="index"
+          >
+            <CardsProduct
+              :id="product.id"
+              :name="product.name"
+              :images="product.images"
+              :initial-price="product.price"
+              :final-price="product.final_price"
+              :category="product.item.category"
+              :item="product.item"
+              :index="index"
+              :sale="product.sale"
+              :uniqueIdName="`items-bestseller-${product.id}`"
+              :key="product.id"
+            />
+          </swiper-slide>
+        </Swiper>
+      </div>
+    </div>
     <Transition name="bottom">
       <div class="snackbar" v-if="showSnackBar">
         Size, Color and quantity are required
@@ -195,6 +259,7 @@ const [
   { data: product, pending: productPending },
   { data: category, pending: categoryPending },
   { data: items, pending: itemPending },
+  { data: mostViewed, pending: pendingMostViewed },
 ] = await Promise.all([
   useMyFetch(() => "product/client/" + id, {
     key: `product:${id}`,
@@ -206,6 +271,10 @@ const [
 
   useMyFetch(() => "item/client/" + item, {
     key: `item:${item}`,
+  }),
+
+  useMyFetch(() => "mostViewedProductsByCategory?cat=" + cat, {
+    key: `newest:${cat}`,
   }),
 ]);
 
@@ -220,6 +289,7 @@ const sizeOptions = computed(() =>
 
 const sizes = ref([]);
 
+// Managing colors, adding and deleting colors
 const colors = ref([]);
 const finalColors = ref([]);
 const addColor = (color, index) => {
@@ -237,16 +307,19 @@ const addColor = (color, index) => {
     finalColors.value.push(GetColorName(tmpColorName));
   }
 };
+// Managing colors, adding and deleting colors
 
 const quantity = ref(0);
 
 const makeOrder = () => {
   let tmpProduct = product.value.data;
   if (!tmpProduct.color) {
+    colors.value.pop();
     colors.value.push("no colors available");
   }
 
   if (!tmpProduct.size) {
+    sizes.value.pop();
     sizes.value.push("no sizes available");
   }
 
@@ -273,23 +346,47 @@ const final_price = computed(() =>
   }).format(product.value.data.final_price)
 );
 
-const final_colors = computed(() => finalColors.value.join(", "));
-const final_sizes = computed(() => sizes.value.join(", "));
+const final_colors = computed({
+  get() {
+    return finalColors.value.join(", ");
+  },
+
+  set(newValue) {
+    finalColors.value = newValue;
+  },
+});
+
+const final_sizes = computed({
+  get() {
+    return sizes.value.join(", ");
+  },
+
+  set(newValue) {
+    sizes.value.value = newValue;
+  },
+});
 
 useHead({
+  title: () => `${product.value.data.name}`,
   meta: [
     { hid: "og-type", property: "og:type", content: "website" },
     {
       hid: "og-title",
       property: "og:title",
       content: () =>
-        `product: ${product.value.data.name} | ${final_price.value}$ | Qty:${quantity.value}`,
+        `product: ${product.value.data.name} | ${final_price.value}$ | in store: ${product.value.data.quantity} more`,
     },
     {
       hid: "og-desc",
       property: "og:description",
       content: () =>
-        `Colors: ${final_colors.value} | Sizes needed: ${final_sizes.value}`,
+        `sizes available ${
+          product.value.data.size ? product.value.data.size.length : 0
+        } and ${
+          product.value.data.color
+            ? "has " + product.value.data.color.length + " available colors."
+            : "no colors ara available."
+        } `,
     },
     {
       hid: "og-image",
@@ -313,6 +410,7 @@ onMounted(() => {
 <style lang="scss">
 .product {
   display: flex;
+  flex-direction: column;
   width: 90%;
   margin: 30px auto;
   padding-bottom: 50px;
@@ -594,6 +692,87 @@ onMounted(() => {
           border: 2px solid $mainColor;
         }
       }
+    }
+  }
+}
+
+.best-seller {
+  margin-top: $sectionsTopMargin;
+  width: 100%;
+  height: fit-content;
+  padding: 30px 40px;
+  text-align: center;
+  background-color: $bg-color;
+
+  .title {
+    margin-bottom: 50px;
+    font-size: 1.3rem;
+    color: $mainTextColor;
+
+    span {
+      font-weight: 900;
+    }
+  }
+
+  .best-sellers-cards {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+
+    .best-seller-swiper {
+      width: 100%;
+
+      // .swiper-wrapper {
+      //   margin: 0 auto;
+      //   width: 90%;
+      // }
+
+      .best-seller-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 40px;
+        height: 40px;
+        background-color: setColorOpacity($mainColor, 0.4);
+        border-radius: 50%;
+        transition: all 0.3s;
+        // top: 0;
+      }
+
+      .swiper-button-prev {
+        left: 5px;
+      }
+      .swiper-button-next {
+        right: 5px !important;
+      }
+
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        background-color: setColorOpacity($mainColor, 1) !important;
+      }
+      .swiper-pagination-bullet {
+        background-color: $secondaryColor !important;
+      }
+      .swiper-button-prev::after,
+      .swiper-button-next::after {
+        color: $whiteColor !important;
+        font-size: 1.3rem !important;
+        font-weight: 900;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        @include flexCenterColumn;
+      }
+
+      // * {
+      //   margin: 0 auto;
+      // }
     }
   }
 }
