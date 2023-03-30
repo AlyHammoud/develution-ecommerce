@@ -174,10 +174,19 @@
         </div>
       </div>
     </div>
+    <Transition name="bottom">
+      <div class="snackbar" v-if="showSnackBar">
+        Size, Color and quantity are required
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
+import { GetColorName } from "hex-color-to-color-name";
+
+const showSnackBar = ref(false);
+
 const { id } = useRoute().params;
 const { item, cat } = useRoute().query;
 const config = useRuntimeConfig();
@@ -212,32 +221,51 @@ const sizeOptions = computed(() =>
 const sizes = ref(null);
 
 const colors = ref([]);
-
+const finalColors = ref([]);
 const addColor = (color, index) => {
   if (colors.value.includes(color)) {
-    colors.value.splice(index, 1);
+    let findIndex = colors.value.indexOf(color);
+    colors.value.splice(findIndex, 1);
+
+    let tmpColorName = color.substring(1);
+    let tmpColorNameIndex = finalColors.value.indexOf(tmpColorName);
+    finalColors.value.splice(tmpColorNameIndex, 1);
   } else {
     colors.value.push(color);
+
+    let tmpColorName = color.substring(1);
+    finalColors.value.push(GetColorName(tmpColorName));
   }
 };
 
 const quantity = ref(0);
 
 const makeOrder = () => {
-  // if (!colors.value.length && !sizes.value && !quantity.value) {
-  //   alert("aa");
-  // } else {
-  navigateTo(
-    `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
-    {
-      external: true,
-    }
-  );
-  // navigateTo("https://wa.me/+96170695391?text=asasdasd", {
-  //   external: true,
-  // });
-  // }
+  if (!colors.value.length && !sizes.value && !quantity.value) {
+    showSnackBar.value = true;
+
+    setTimeout(() => {
+      showSnackBar.value = false;
+    }, 4000);
+  } else {
+    showSnackBar.value = false;
+    navigateTo(
+      `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
+      {
+        external: true,
+      }
+    );
+  }
 };
+
+const final_price = computed(() =>
+  new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+  }).format(product.value.data.final_price)
+);
+
+const final_colors = computed(() => finalColors.value.join(", "));
+const final_sizes = computed(() => sizes.value.join(", "));
 
 useHead({
   meta: [
@@ -246,12 +274,12 @@ useHead({
       hid: "og-title",
       property: "og:title",
       content: () =>
-        `product: ${product.value.data.name} | ${product.value.data.final_price}$ | Qty:${quantity.value}`,
+        `product: ${product.value.data.name} | ${final_price.value}$ | Qty:${quantity.value}`,
     },
     {
       hid: "og-desc",
       property: "og:description",
-      content: "This is a sweet post",
+      content: () => `Colors: ${final_colors} | Sizes needed: ${final_sizes}`,
     },
     {
       hid: "og-image",
@@ -281,6 +309,30 @@ onMounted(() => {
 
   @media screen and (max-width: 880px) {
     width: 100%;
+  }
+
+  .snackbar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    // width: 100%;
+    font-size: 1em;
+    background-color: $mainColor;
+    color: $whiteColor;
+    padding: 20px;
+    transition: all 8s;
+  }
+
+  .bottom-enter-active,
+  .bottom-leave-active {
+    bottom: 30px;
+    transition: bottom 0.5s ease;
+  }
+
+  .bottom-enter-from,
+  .bottom-leave-to {
+    bottom: -100px;
   }
 }
 .product-wrapper {

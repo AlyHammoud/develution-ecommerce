@@ -17,6 +17,7 @@
   "dependencies": {
     "@splidejs/vue-splide": "^0.6.12",
     "@vueform/multiselect": "^2.6.1",
+    "hex-color-to-color-name": "^1.0.2",
     "nuxt-swiper": "^1.0.1",
     "vue-awesome-paginate": "^1.1.46"
   }
