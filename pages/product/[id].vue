@@ -421,20 +421,23 @@ onMounted(() => {
 
   .snackbar {
     position: fixed;
-    bottom: 30px;
+    bottom: 0;
+
     left: 50%;
     transform: translateX(-50%);
-    // width: 100%;
+    width: min(350px, 90%);
     font-size: 1em;
     background-color: $mainColor;
     color: $whiteColor;
-    padding: 20px;
+    padding: 10px 20px;
+    text-align: center;
     transition: all 8s;
+    z-index: 9999;
   }
 
   .bottom-enter-active,
   .bottom-leave-active {
-    bottom: 30px;
+    bottom: 0px;
     transition: bottom 0.5s ease;
   }
 
