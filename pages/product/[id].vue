@@ -311,7 +311,7 @@ const addColor = (color, index) => {
 
 const quantity = ref(0);
 
-const makeOrder = () => {
+const makeOrder = async () => {
   let tmpProduct = product.value.data;
   if (!tmpProduct.color) {
     colors.value.pop();
@@ -323,26 +323,12 @@ const makeOrder = () => {
     sizes.value.push("no sizes available");
   }
 
-  // set product info as global to share with whatsapp
-  return new Promise((res, rej) => {
-    useState(
-      "setProductInfo",
-      (
-        data = {
-          image: product.value.data.images[0].image_url,
-          name: product.value.data.name,
-          price: final_price.value,
-          sizes: final_sizes.value,
-          quantity: quantity.value,
-          colors: final_colors.value,
-        }
-      ) => data
-    );
-
-    res(true);
-  }).then(() => {
-    navigateTo(`/product/send`, { replace: true });
-  });
+  navigateTo(
+    `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
+    {
+      external: true,
+    }
+  );
 
   // if (!colors.value.length || !sizes.value.length || quantity.value == 0) {
   //   showSnackBar.value = true;
@@ -352,12 +338,7 @@ const makeOrder = () => {
   //   }, 4000);
   // } else {
   //   showSnackBar.value = false;
-  //   navigateTo(
-  //     `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
-  //     {
-  //       external: true,
-  //     }
-  //   );
+
   // }
 };
 
