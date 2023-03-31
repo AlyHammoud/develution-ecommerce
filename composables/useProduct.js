@@ -1,0 +1,1 @@
+export const useSetProductInfo = () => useState('setProductInfo', (data ={'a':'a'}) => data)

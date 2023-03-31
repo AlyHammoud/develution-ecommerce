@@ -34,6 +34,15 @@
   </div>
 </template>
 
+<script setup>
+const { data: visitSite, pending: visitPending } = useMyFetch(
+  () => "/siteData",
+  {
+    ssr: false,
+  }
+);
+</script>
+
 <style lang="scss">
 .default {
   width: 100%;
