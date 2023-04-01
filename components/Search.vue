@@ -17,42 +17,42 @@
           <div class="accordian-bottom" v-if="showCategoryAccoridan">
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
@@ -72,42 +72,42 @@
           <div class="accordian-bottom" v-if="showItemAccoridan">
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
@@ -127,42 +127,42 @@
           <div class="accordian-bottom" v-if="showProductAccoridan">
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
 
             <nuxt-link to="#">
               <div class="item">
-                <img src="images/empty.png" alt="" />
+                <img src="/images/empty.png" alt="" />
                 <p>Name</p>
               </div>
             </nuxt-link>
