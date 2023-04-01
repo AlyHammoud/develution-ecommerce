@@ -324,7 +324,7 @@ const makeOrder = async () => {
   }
 
   navigateTo(
-    `https://api.whatsapp.com/send?text=${config.baseURL}product/22?cat=3%26item=9&phone=+96170695391`,
+    `https://api.whatsapp.com/send?text=${config.baseURL}product/${product.id}?cat=${cat.id}%26item=${items.id}&phone=${config.phone}`,
     {
       external: true,
     }

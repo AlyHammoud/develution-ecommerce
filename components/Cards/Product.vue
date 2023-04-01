@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="actions">
-        <Icon class="cart" name="uil:shopping-cart"></Icon>
+        <Icon class="carts" @click="addToCart" name="uil:shopping-cart"></Icon>
         <Icon class="heart" name="uil:heart"></Icon>
       </div>
     </div>
@@ -138,20 +138,29 @@ const {
   },
 });
 
-// const imagesFade = (ev, indexx, leftValue, opacityValue) => {
-//   // console.log(tmpItems.data[index].images);
-//   const tmpImages = toRaw(images);
+const addToCart = () => {
+  let cartProducts = localStorage.getItem("cartProducts") ?? "[]";
 
-//   if (tmpImages.length > 1) {
-//   document.querySelectorAll(".product-card .images .image-thumb")[
-//     index
-//   ].style.left = leftValue;
+  let tmpProduct = {
+    id: id,
+    image: images[0]?.image_url || "",
+    name: name,
+    price: finalPrice,
+    quantity: sale,
+    itemId: item.id,
+    catId: category.id,
+  };
 
-//     document.querySelectorAll(".product-card .images .main-image")[
-//       index
-//     ].style.opacity = opacityValue;
-//   }
-// };
+  cartProducts = JSON.parse(cartProducts);
+
+  if (Array.isArray(cartProducts)) {
+    if (!cartProducts.some((e) => e.id == tmpProduct.id)) {
+      cartProducts.push(tmpProduct);
+      localStorage.setItem("cartProducts", JSON.stringify(cartProducts));
+    }
+  }
+};
+
 const imagesFade = (ev, indexx, leftValue, opacityValue) => {
   // console.log(tmpItems.data[index].images);
   const tmpImages = toRaw(images);
@@ -293,12 +302,12 @@ const imagesFade = (ev, indexx, leftValue, opacityValue) => {
     justify-content: center;
 
     * {
-      font-size: 1.3rem;
+      font-size: 1.3rem !important;
       cursor: pointer;
       @include transition;
     }
 
-    .cart {
+    .carts {
       color: $helperColor;
       border-radius: 50%;
     }

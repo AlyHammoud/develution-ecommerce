@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     public: {
       baseURL: process.env.BASE_URL,
       apiUrl: process.env.API_URL,
+      phone: "+96170695391",
     },
   },
   swiper: {

@@ -17,7 +17,7 @@
       @click="toggleMenu"
       v-click-outside="{
         handler: () => (mobileMenuOpened = false),
-        excludeByClassNameWithChilds: ['hamburger'],
+        excludeByClassNameWithChilds: ['hamburger', 'actions'],
         excludeByClassNamesOnlyParents: ['navbar-items'],
       }"
     >
@@ -27,16 +27,43 @@
     </div>
     <div class="navbar-actions">
       <div class="separator"></div>
-      <Icon name="material-symbols:add-shopping-cart" />
+      <div class="navbar-cart">
+        <Icon
+          class="cart-icon"
+          name="material-symbols:add-shopping-cart"
+          @click="showCartPanel = !showCartPanel"
+          v-click-outside="{
+            handler: () => (showCartPanel = false),
+            excludeByClassNameWithChilds: ['cart-icon', 'navbar-cart-panel'],
+          }"
+        />
+        <transition name="scale">
+          <CardsCart class="navbar-cart-panel" v-if="showCartPanel" />
+        </transition>
+      </div>
       <Icon name="material-symbols:ecg-heart" />
       <Icon name="mdi:user" />
-      <Icon name="material-symbols:search" />
+      <div class="search-icon">
+        <Icon
+          name="material-symbols:search"
+          @click="showSearchPanel = !showSearchPanel"
+        />
+        <Transition name="top">
+          <Search
+            class="fixed-search"
+            v-if="showSearchPanel"
+            @close="showSearchPanel = false"
+          />
+        </Transition>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 const mobileMenuOpened = ref(false);
+const showCartPanel = ref(false);
+const showSearchPanel = ref(false);
 
 onMounted(() => {
   window.addEventListener("resize", () => {
@@ -205,6 +232,57 @@ const toggleMenu = () => {
     gap: 20px;
     border-bottom: 1px solid $secondaryColor;
 
+    .search-icon {
+      .fixed-search {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 500px;
+        background: setColorOpacity($mainColor, 0.9);
+        backdrop-filter: blur(15px);
+      }
+      .top-enter-active,
+      .top-leave-active {
+        top: 0;
+        transition: all 0.5s ease;
+      }
+
+      .top-enter-from,
+      .top-leave-to {
+        top: -120%;
+      }
+    }
+
+    .navbar-cart {
+      position: relative !important;
+
+      .scale-enter-active,
+      .scale-leave-active {
+        transform: scale(1);
+        opacity: 1;
+        transition: all 0.5s ease;
+      }
+
+      .scale-enter-from,
+      .scale-leave-to {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+
+      &-panel {
+        transform: scale(1);
+        opacity: 1;
+        position: absolute;
+        top: 45px;
+        left: -120px;
+        height: fit-content;
+
+        @media (max-width: 700px) {
+          left: -140px;
+        }
+      }
+    }
     .separator {
       width: 2px;
       height: 15x;

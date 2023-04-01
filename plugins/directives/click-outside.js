@@ -28,7 +28,7 @@ export default defineNuxtPlugin((nuxtApp) =>
           excludeByClassNameWithChilds = [],
           excludeByClassNamesOnlyParents = []
         } = binding.value;
-
+// console.log(excludeByClassNamesOnlyParents);
         excludeRefs.forEach((ref) => {
           if (e.composedPath().includes(vnode.ctx.refs[ref])) {
             closeByRef = false;
