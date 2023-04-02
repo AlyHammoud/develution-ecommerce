@@ -1,11 +1,10 @@
-export const useMyFetch = (request, options) => {
+export const useMyFetch =  (request, options) => {
     const config = useRuntimeConfig()
+    const router = useRouter()
 
-    return useFetch(request, {
+    return  useFetch(request, {
         baseURL: config.apiUrl,
-        onResponseError({ request, response, options }) {
-            navigateTo('/')
-        },
+       
         ...options,
     })
 }

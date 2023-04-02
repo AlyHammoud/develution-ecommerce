@@ -148,7 +148,7 @@ const page = ref(1);
 
 const [
   { data: category, pending: catPending, error: catError },
-  { data: items, pending: itemsPending, error },
+  { data: items, pending: itemsPending, error: itemsError },
   { data: mostViewed, pending: pendingMostViewed },
 ] = await Promise.all([
   useMyFetch(() => "category/client/" + cat, {
@@ -163,6 +163,14 @@ const [
     key: `newest:${cat}`,
   }),
 ]);
+
+if (catError.value || itemsError.value) {
+  throw createError({
+    statusCode: 404,
+    message: "Error getting your data, please trye again!",
+    fatal: true,
+  });
+}
 
 const paginatorPage = (pageItem) => {
   page.value = pageItem;

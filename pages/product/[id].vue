@@ -256,9 +256,9 @@ const { item, cat } = useRoute().query;
 const config = useRuntimeConfig();
 
 const [
-  { data: product, pending: productPending },
-  { data: category, pending: categoryPending },
-  { data: items, pending: itemPending },
+  { data: product, pending: productPending, error: productError },
+  { data: category, pending: categoryPending, error: categoryError },
+  { data: items, pending: itemPending, error: itemsError },
   { data: mostViewed, pending: pendingMostViewed },
 ] = await Promise.all([
   useMyFetch(() => "product/client/" + id, {
@@ -277,6 +277,14 @@ const [
     key: `newest:${cat}`,
   }),
 ]);
+
+if (productError.value || categoryError.value || itemsError.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: `Page  not found.`,
+    fatal: true,
+  });
+}
 
 const sizeOptions = computed(() =>
   product.value.data.size
@@ -324,7 +332,7 @@ const makeOrder = async () => {
   }
 
   navigateTo(
-    `https://api.whatsapp.com/send?text=${config.baseURL}product/${product.id}?cat=${cat.id}%26item=${items.id}&phone=${config.phone}`,
+    `https://api.whatsapp.com/send?text=${config.baseURL}product/${product.value.data.id}?cat=${category.value.data.id}%26item=${items.value.data.id}&phone=${config.phone}`,
     {
       external: true,
     }

@@ -105,7 +105,7 @@ const startSearch = (ev) => {
 
 const [
   { data: category, pending: catPending, error: catError },
-  { data: items, pending: itemsPending, error },
+  { data: items, pending: itemsPending, error: itemsError },
   { data: products, pending: productsPending, error: productError },
 ] = await Promise.all([
   useMyFetch(() => "category/client/" + cat, {
@@ -129,6 +129,14 @@ const [
     }
   ),
 ]);
+
+if (catError.value || itemsError.value || productError.value) {
+  throw createError({
+    statusCode: 404,
+    message: "Error getting your data, please trye again!",
+    fatal: true,
+  });
+}
 
 const paginatorPage = (pageItem) => {
   page.value = pageItem;

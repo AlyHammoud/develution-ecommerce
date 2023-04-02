@@ -127,14 +127,32 @@ const x = computed(() => Math.random() * 134340);
 const {
   data: categories,
   pending,
-  error,
+  error: categoriesError,
 } = useMyFetch(() => "category/allAvailable");
 
-const { data: topProducts, pending: pendingTopProducts } =
-  useMyFetch("mostViewedProducts");
+const {
+  data: topProducts,
+  pending: pendingTopProducts,
+  error: topProductsError,
+} = useMyFetch("mostViewedProducts");
 
-const { data: newestProducts, pending: pendingNewest } =
-  useMyFetch("newestProducts");
+const {
+  data: newestProducts,
+  pending: pendingNewest,
+  error: newestProductsError,
+} = useMyFetch("newestProducts");
+
+if (
+  categoriesError.value ||
+  topProductsError.value ||
+  newestProductsError.value
+) {
+  throw createError({
+    statusCode: 404,
+    message: "Error getting your data, please trye again!",
+    fatal: true,
+  });
+}
 </script>
 
 <style lang="scss">
