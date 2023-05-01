@@ -41,8 +41,8 @@
           <CardsCart class="navbar-cart-panel" v-if="showCartPanel" />
         </transition>
       </div>
-      <Icon name="material-symbols:ecg-heart" />
-      <Icon name="mdi:user" />
+      <!-- <Icon name="material-symbols:ecg-heart" /> -->
+      <!-- <Icon name="mdi:user" /> -->
       <div class="search-icon">
         <Icon
           name="material-symbols:search"
@@ -254,6 +254,10 @@ const toggleMenu = () => {
       }
     }
 
+    .navbar-cart-panel {
+      transform: translateX(-20%) !important;
+    }
+
     .navbar-cart {
       position: relative !important;
 
@@ -304,7 +308,7 @@ const toggleMenu = () => {
       padding: 4px;
 
       @media (max-width: 700px) {
-        font-size: 1.3rem;
+        // font-size: 1.3rem;
         padding: 2px;
       }
 

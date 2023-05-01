@@ -101,7 +101,7 @@ const makeOrder = (pId, iId, cId) => {
       position: absolute;
       z-index: -11;
       top: 0;
-      left: 50%;
+      left: 80%;
       width: 50px;
       height: 50px;
       background-color: $mainColor;

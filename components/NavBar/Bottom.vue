@@ -14,7 +14,7 @@
       <div class="socials">
         <NuxtLink to="#"><Icon name="fa:facebook" /></NuxtLink>
         <NuxtLink to="#"><Icon name="fa:instagram" /></NuxtLink>
-        <NuxtLink to="#"><Icon name="fa:twitter" /></NuxtLink>
+        <!-- <NuxtLink to="#"><Icon name="fa:twitter" /></NuxtLink> -->
       </div>
     </div>
   </div>

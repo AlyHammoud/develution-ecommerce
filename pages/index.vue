@@ -83,6 +83,31 @@
       </div>
     </div>
 
+    <section class="advert" v-if="!pendingAdvert">
+      <Swiper
+        :slidesPerView="1"
+        :spaceBetween="0"
+        :navigation="true"
+        :modules="[SwiperNavigation]"
+        class="advert-swiper"
+        v-if="advertProduct.length"
+      >
+        <swiper-slide
+          class="advert-slide"
+          v-for="(adv, index) in advertProduct"
+          :key="index"
+        >
+          <div>
+            <p>{{ adv.description }}</p>
+            <nuxt-link :to="`/advert/${adv.id}`"
+              ><button>Learn more</button></nuxt-link
+            >
+          </div>
+          <img :src="adv.image" alt="" />
+        </swiper-slide>
+      </Swiper>
+    </section>
+
     <div class="newest-products">
       <p class="title">Take a glimpse... <span>New Arrivals</span></p>
       <div class="cards-wrapper">
@@ -142,14 +167,21 @@ const {
   error: newestProductsError,
 } = useMyFetch("newestProducts");
 
+const {
+  data: advertProduct,
+  pending: pendingAdvert,
+  error: advertError,
+} = useMyFetch("get-all-advert");
+
 if (
   categoriesError.value ||
   topProductsError.value ||
-  newestProductsError.value
+  newestProductsError.value ||
+  advertError.value
 ) {
   throw createError({
     statusCode: 404,
-    message: "Error getting your data, please trye again!",
+    message: "Error getting your data, please try again!",
     fatal: true,
   });
 }
@@ -198,6 +230,102 @@ if (
 .home-page {
   transform: perspective(200px);
   perspective: 200px;
+
+  .advert {
+    width: 100%;
+    margin-block: 50px;
+    height: 100%;
+
+    &-swiper {
+      width: 100%;
+      height: 100%;
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 40px;
+        height: 40px;
+        background-color: $mainColor;
+        border-radius: 50%;
+        transition: all 0.3s;
+
+        @media (width < 900px) {
+          top: 40%;
+        }
+      }
+
+      .swiper-button-prev {
+        left: 40%;
+
+        @media (width < 900px) {
+          left: 0%;
+        }
+      }
+
+      .swiper-button-prev::after,
+      .swiper-button-next::after {
+        color: $whiteColor !important;
+        font-size: 1.3rem !important;
+        font-weight: 900;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        text-align: center;
+        @include flexCenterColumn;
+      }
+
+      .advert-slide {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        // height: 400px;
+        height: fit-content;
+        width: 100%;
+        @media (width < 900px) {
+          flex-direction: column;
+        }
+        // background-color: $mainColor;
+        img {
+          min-width: 60% !important;
+          height: 450px;
+          border-radius: 4px;
+
+          @media (width < 900px) {
+            min-width: 100% !important;
+            width: 100%;
+            // height: 400px !important;
+            margin-top: 20px;
+            height: 320px;
+            // object-fit: cover;
+          }
+        }
+
+        div {
+          width: 100%;
+          // height: inherit;
+          height: 250px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 30px;
+
+          p {
+            font-size: 2.2em;
+          }
+
+          button {
+            outline: transparent;
+            border: transparent;
+            padding: 20px 50px;
+            background-color: $mainColor;
+            color: $whiteColor;
+            cursor: pointer;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+  }
 
   .best-seller {
     margin-top: $sectionsTopMargin;
@@ -289,6 +417,11 @@ if (
   @include flexCenterColumn;
   padding: 20px 40px;
   width: 100%;
+
+  @media (width < 800px) {
+    // display: none;
+    padding: 10px;
+  }
   // background-color: setColorOpacity($mainColor, 0.1);
 
   & > p {
@@ -306,12 +439,23 @@ if (
     gap: 50px;
     padding: 20px 40px;
 
+    @media (width < 800px) {
+      row-gap: 80px;
+      column-gap: 20px;
+      padding: 10px;
+    }
+
     .category {
       // @include flexCenterColumn;
 
       width: 160px;
       height: 160px;
       cursor: pointer;
+
+      @media (width < 400px) {
+        width: 130px;
+        height: 130px;
+      }
 
       .image {
         width: 100%;
