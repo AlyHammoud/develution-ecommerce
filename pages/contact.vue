@@ -38,7 +38,7 @@
         <p>We will try to accommodate you request as soon as possible.</p>
       </div>
       <div class="image" @click="gotWhatsapp">
-        <img src="/images/whatsapp 2.png" alt="" />
+        <img src="/images/whatsapp2.png" alt="" />
         <p>contact us</p>
       </div>
     </div>
