@@ -6,4 +6,8 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useGeneralInfoStore } from "./store/general_info";
+const store = useGeneralInfoStore();
+store.fetchGeneralInfos();
+</script>

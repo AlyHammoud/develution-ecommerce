@@ -4,21 +4,30 @@
       <div class="infos">
         <div class="location info">
           <Icon name="material-symbols:add-location" />
-          <p>Lebanon, Beirut</p>
+          <p>{{ store.getGeneralInfos.address || "Address" }}</p>
         </div>
         <div class="location info">
           <Icon name="material-symbols:phone-forwarded-rounded" />
-          <p>+961 1 123 456</p>
+          <p>{{ store.getGeneralInfos.phone_number }}</p>
         </div>
       </div>
       <div class="socials">
-        <NuxtLink to="#"><Icon name="fa:facebook" /></NuxtLink>
-        <NuxtLink to="#"><Icon name="fa:instagram" /></NuxtLink>
+        <NuxtLink :to="store.getGeneralInfos.facebook || '#'" target="blank"
+          ><Icon name="fa:facebook"
+        /></NuxtLink>
+        <NuxtLink :to="store.getGeneralInfos.insta || '#'" target="blank"
+          ><Icon name="fa:instagram"
+        /></NuxtLink>
         <!-- <NuxtLink to="#"><Icon name="fa:twitter" /></NuxtLink> -->
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+import { useGeneralInfoStore } from "~~/store/general_info";
+const store = useGeneralInfoStore();
+</script>
 
 <style lang="scss">
 .navbar-bottom {

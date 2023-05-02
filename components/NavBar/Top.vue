@@ -1,7 +1,10 @@
 <template>
   <div class="navbar-top">
     <div class="logo">
-      <a href="#">Logo</a>
+      <NuxtLink to="/">
+        <span v-if="!store.getGeneralInfos.logo">Logo</span>
+        <span v-else><img :src="store.getGeneralInfos.logo" alt="" /></span>
+      </NuxtLink>
     </div>
     <div
       class="navbar-items"
@@ -61,11 +64,14 @@
 </template>
 
 <script setup>
+import { useGeneralInfoStore } from "~~/store/general_info";
+const store = useGeneralInfoStore();
+
 const mobileMenuOpened = ref(false);
 const showCartPanel = ref(false);
 const showSearchPanel = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener("resize", () => {
     mobileMenuOpened.value = false;
   });
@@ -123,6 +129,10 @@ const toggleMenu = () => {
       color: $mainColor;
       font-size: 1.7rem;
       font-weight: 900;
+    }
+
+    img {
+      width: 50px;
     }
   }
 

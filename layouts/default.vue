@@ -11,7 +11,10 @@
       <div class="footer-wrapper">
         <div class="top">
           <div class="logo">
-            <nuxt-link to="/">Logo</nuxt-link>
+            <nuxt-link v-if="!store.getGeneralInfos.logo" to="/"
+              >Logo</nuxt-link
+            >
+            <img v-else :src="store.getGeneralInfos.logo" alt="" />
           </div>
           <div class="brief">
             <p>We are one click away...</p>
@@ -26,7 +29,7 @@
           </div>
           <div class="rigth">
             <p>Powered by develution</p>
-            <p>Logo</p>
+            <img src="/images/develution.jpeg" alt="" />
           </div>
         </div>
       </div>
@@ -35,6 +38,8 @@
 </template>
 
 <script setup>
+import { useGeneralInfoStore } from "~~/store/general_info";
+const store = useGeneralInfoStore();
 const { data: visitSite, pending: visitPending } = useMyFetch(
   () => "/siteData",
   {
@@ -81,6 +86,10 @@ const { data: visitSite, pending: visitPending } = useMyFetch(
           a {
             color: $mainColor;
           }
+
+          img {
+            width: 80px;
+          }
         }
       }
     }
@@ -92,7 +101,7 @@ const { data: visitSite, pending: visitPending } = useMyFetch(
       margin-top: 50px;
       padding-bottom: 10px;
 
-      @media (max-width: 570px) {
+      @media (max-width: 595px) {
         row-gap: 40px;
         justify-content: center;
       }
@@ -100,6 +109,7 @@ const { data: visitSite, pending: visitPending } = useMyFetch(
       .left {
         @include flexCenterRow;
         gap: 10px;
+        margin-right: 30px;
 
         a {
           @media (max-width: 570px) {
@@ -117,6 +127,13 @@ const { data: visitSite, pending: visitPending } = useMyFetch(
 
         * {
           color: $mainTextColor;
+        }
+
+        img {
+          width: 70px;
+          height: 70px;
+          object-fit: cover;
+          border-radius: 50%;
         }
       }
     }

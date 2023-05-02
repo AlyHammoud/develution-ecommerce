@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["nuxt-icon", "nuxt-swiper", "@nuxtjs/i18n"],
+  modules: ["nuxt-icon", "nuxt-swiper", "@nuxtjs/i18n", "@pinia/nuxt"],
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,

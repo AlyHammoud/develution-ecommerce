@@ -248,6 +248,8 @@
 
 <script setup>
 import { GetColorName } from "hex-color-to-color-name";
+import { useGeneralInfoStore } from "~~/store/general_info";
+const store = useGeneralInfoStore();
 
 const showSnackBar = ref(false);
 
@@ -332,7 +334,7 @@ const makeOrder = async () => {
   }
 
   navigateTo(
-    `https://api.whatsapp.com/send?text=${config.baseURL}product/${product.value.data.id}?cat=${category.value.data.id}%26item=${items.value.data.id}&phone=${config.phone}`,
+    `https://api.whatsapp.com/send?text=${config.baseURL}product/${product.value.data.id}?cat=${category.value.data.id}%26item=${items.value.data.id}&phone=${store.getGeneralInfos.phone_number}`,
     {
       external: true,
     }
