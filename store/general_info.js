@@ -22,7 +22,7 @@ export const useGeneralInfoStore = defineStore( 'general_info',{
             }
           
         } catch (error) {
-            return error
+            return error;
         }
     }
   },
