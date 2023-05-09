@@ -53,6 +53,7 @@
       <div class="items-contents" v-else>
         <div
           class="item"
+          v-if="products.data.length"
           v-for="(product, index) in products.data"
           :key="index"
         >
@@ -70,6 +71,7 @@
             :sale="product.sale"
           />
         </div>
+        <div v-else class="search-empty">No product was found!</div>
       </div>
     </div>
     <div class="items-paginator">
@@ -171,6 +173,14 @@ const paginatorPage = (pageItem) => {
       //   height: 300px;
       //   width: 100%;
       transform: translate(-50%, -50%);
+    }
+
+    .search-empty {
+      width: 100%;
+      margin: 40px 0;
+      text-align: center;
+      font-weight: 700;
+      color: $mainColor;
     }
 
     .items-contents {

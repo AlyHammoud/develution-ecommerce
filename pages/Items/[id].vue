@@ -83,58 +83,60 @@
         </p>
       </div>
       <div class="best-sellers-cards">
-        <Swiper
-          :slidesPerView="5"
-          :spaceBetween="0"
-          :pagination="{
-            clickable: true,
-          }"
-          :breakpoints="{
-            '320': {
-              slidesPerView: 1,
-              // spaceBetween: 5,
-            },
-            '590': {
-              slidesPerView: 2,
-              spaceBetween: 5,
-            },
-            '860': {
-              slidesPerView: 3,
-              spaceBetween: 10,
-            },
-            '1120': {
-              slidesPerView: 4,
-              spaceBetween: 20,
-            },
-            '1400': {
-              slidesPerView: 5,
-              spaceBetween: 30,
-            },
-          }"
-          :navigation="true"
-          :modules="[SwiperPagination, SwiperNavigation]"
-          class="best-seller-swiper"
-        >
-          <swiper-slide
-            class="best-seller-slide"
-            v-for="(product, index) in mostViewed.data"
-            :key="index"
+        <ClientOnly>
+          <Swiper
+            :slidesPerView="5"
+            :spaceBetween="0"
+            :pagination="{
+              clickable: true,
+            }"
+            :breakpoints="{
+              '320': {
+                slidesPerView: 1,
+                spaceBetween: 5,
+              },
+              '590': {
+                slidesPerView: 2,
+                spaceBetween: 5,
+              },
+              '860': {
+                slidesPerView: 3,
+                spaceBetween: 10,
+              },
+              '1120': {
+                slidesPerView: 4,
+                spaceBetween: 20,
+              },
+              '1400': {
+                slidesPerView: 5,
+                spaceBetween: 30,
+              },
+            }"
+            :navigation="true"
+            :modules="[SwiperPagination, SwiperNavigation]"
+            class="best-seller-swiper"
           >
-            <CardsProduct
-              :id="product.id"
-              :name="product.name"
-              :images="product.images"
-              :initial-price="product.price"
-              :final-price="product.final_price"
-              :category="product.item.category"
-              :item="product.item"
-              :index="index"
-              :sale="product.sale"
-              :uniqueIdName="`items-bestseller-${product.id}`"
-              :key="product.id"
-            />
-          </swiper-slide>
-        </Swiper>
+            <swiper-slide
+              class="best-seller-slide"
+              v-for="(product, index) in mostViewed.data"
+              :key="index"
+            >
+              <CardsProduct
+                :id="product.id"
+                :name="product.name"
+                :images="product.images"
+                :initial-price="product.price"
+                :final-price="product.final_price"
+                :category="product.item.category"
+                :item="product.item"
+                :index="index"
+                :sale="product.sale"
+                :uniqueIdName="`items-bestseller-${product.id}`"
+                :key="product.id"
+              />
+            </swiper-slide>
+          </Swiper>
+        </ClientOnly>
       </div>
     </div>
   </div>
@@ -304,13 +306,16 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
 
     .best-sellers-cards {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
+      // display: flex;
+      // justify-content: center;
+      // flex-wrap: wrap;
+      // gap: 30px;
 
       .best-seller-swiper {
-        width: 100%;
+        width: 100% !important;
+        // display: flex;
+        // align-items: center;
+        // justify-content: space-between;
 
         // .swiper-wrapper {
         //   margin: 0 auto;
@@ -318,9 +323,9 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
         // }
 
         .best-seller-slide {
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          // display: flex;
+          // align-items: center;
+          // justify-content: center;
         }
 
         .swiper-button-prev,
@@ -356,6 +361,11 @@ const imagesFade = (ev, index, leftValue, opacityValue) => {
           height: 100%;
           border-radius: 50%;
           @include flexCenterColumn;
+        }
+
+        .swiper-pagination.swiper-pagination-horizontal {
+          // display: none;
+          transform: translateY(50%);
         }
 
         // * {
