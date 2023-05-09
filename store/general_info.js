@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-
+ 
 export const useGeneralInfoStore = defineStore( 'general_info',{
     
   state: () => ({
